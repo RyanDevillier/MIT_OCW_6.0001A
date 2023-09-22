@@ -23,7 +23,7 @@ SCRABBLE_LETTER_VALUES = {
 # Helper code
 # (you don't need to understand this helper code)
 
-WORDLIST_FILENAME = "words.txt"
+WORDLIST_FILENAME = r"C:\Users\devil\OneDrive\Desktop\MIT Courses\6.0001A - Introduction_To_Computer_Science_And_Programming_In_Python\MIT_OCW_6.0001A\Problem Sets\ps3\words.txt"
 
 def load_words():
     """
@@ -207,12 +207,24 @@ def is_valid_word(word, hand, word_list):
     """
 
     validity_checker = []
+    wildcard_checker = []
+    vowels = VOWELS.lower()
     word = word.lower()
-    # Check if word is in the word_list file of valid words
-    if word not in word_list:
+
+    # Check if word is in word_list and does not have a wildcard in it
+    if word not in word_list and word.find('*') == -1:
         return False
+
+    # Check if word isn't in word list bc it has a wildcard in it
+    if word not in word_list and word.find("*") != -1:
+        wildcard_idx = word.find("*")
+        for letter in vowels: # Check to see if replacing the wildcard with a vowel would make it a valid word
+            if word[wildcard_idx].replace(word[wildcard_idx], letter) in word_list:
+                wildcard_checker.append(True) # If so, append True
+            else:
+                wildcard_checker.append(False) # If not, append False
     
-    else:
+    if word in word_list:
         # If it is, check to see if there is duplicated letters in the word
         if len(set(word)) < len(list(word)):
     
@@ -241,11 +253,16 @@ def is_valid_word(word, hand, word_list):
                 else:
                     validity_checker.append(True)
 
-        if False in validity_checker:
-            return False
-        else:
-            return True
-
+        if wildcard_checker != []: # if there were wildcards in the word played
+            if False in validity_checker and True in wildcard_checker:
+                return False
+            elif True in validity_checker and True in wildcard_checker:
+                return True
+        else: # if there were not wild cards in the word played
+            if False in validity_checker:
+                return False
+            elif True in validity_checker:
+                return True
 
 pass  # TO DO... Remove this line when you implement this function
 
