@@ -82,3 +82,61 @@ else:
     print('HOLY MOLY THAT IS A VERY VERY VERY VALID WORD')
 
 print('asduashd')
+
+validity_checker = [] # checks if a letter is valid to be played based on the hand dealt (appends True if so, False if not)
+    wildcard_checker = [] # checks if there is a wildcard in the word (appends True if so, False if not)
+    vowels = VOWELS.lower()
+    word = word.lower()
+
+    # Check if word is not in word_list and does not have a wildcard in it
+    if word not in word_list and word.find('*') == -1:
+        return False
+
+    # Check if word is not in word list bc it has a wildcard in it
+    if word not in word_list and word.find("*") != -1:
+        wildcard_idx = word.find("*")
+        for letter in vowels: # Check to see if replacing the wildcard with a vowel would make it a valid word
+            if word[wildcard_idx].replace(word[wildcard_idx], letter) in word_list:
+                wildcard_checker.append(True) # If so, append True
+            else:
+                wildcard_checker.append(False) # If not, append False
+    
+    if word in word_list:
+        # If it is, check to see if there is duplicated letters in the word
+        if len(set(word)) < len(list(word)):
+    
+            word_dict = dict()
+
+            for letter in word: # Creating a dict of the frequency of letters in our word
+                if letter not in word_dict:
+                    word_dict[letter] = 1
+                else:
+                    word_dict[letter] += 1
+
+            for letter in word_dict: # Checking the letters in our dict to see if...
+                if letter not in hand: # they are in the dealt hand
+                    validity_checker.append(False)
+                    continue
+                if word_dict[letter] > hand[letter]: # if they've been used more than the hand has available to us
+                    validity_checker.append(False)
+                else:
+                    validity_checker.append(True)
+        
+        else: # If there are no duplicated values...
+            for letter in word: 
+                if letter not in hand: 
+                    validity_checker.append(False)
+                    continue
+                else:
+                    validity_checker.append(True)
+
+        if wildcard_checker != []: # if there were wildcards in the word played
+            if False in validity_checker and True in wildcard_checker:
+                return False
+            elif True in validity_checker and True in wildcard_checker:
+                return True
+        else: # if there were not wild cards in the word played
+            if False in validity_checker:
+                return False
+            elif True in validity_checker:
+                return True

@@ -11,7 +11,7 @@ import math
 import random
 import string
 
-VOWELS = 'aeiou*'
+VOWELS = 'aeiou'
 CONSONANTS = 'bcdfghjklmnpqrstvwxyz'
 HAND_SIZE = 7
 
@@ -206,64 +206,93 @@ def is_valid_word(word, hand, word_list):
     returns: boolean
     """
 
-    validity_checker = []
-    wildcard_checker = []
+    validity_checker = [] # container that holds the checks to see if a letter is valid to be played based on the hand dealt (appends True if so, False if not)
+    wildcard_checker = [] # container that holds the checks to see if replacing the wildcard with a vowel would yield a valid word (appends True if so, False if not)
     vowels = VOWELS.lower()
     word = word.lower()
 
-    # Check if word is in word_list and does not have a wildcard in it
-    if word not in word_list and word.find('*') == -1:
-        return False
+    # Check if the word has a wildcard
+    if "*" in word:
+        wildcard_idx = word.find('*')
+        for vowel in vowels:
+            if word[0:wildcard_idx] + vowel + word[(wildcard_idx + 1): ] in word_list: # check if the word is valid when the wildcard is replaced with one of the vowels
+                wildcard_checker.append(True)
+                if len(set(word)) < len(list(word)): # checking if the word has duplicate letters
 
-    # Check if word isn't in word list bc it has a wildcard in it
-    if word not in word_list and word.find("*") != -1:
-        wildcard_idx = word.find("*")
-        for letter in vowels: # Check to see if replacing the wildcard with a vowel would make it a valid word
-            if word[wildcard_idx].replace(word[wildcard_idx], letter) in word_list:
-                wildcard_checker.append(True) # If so, append True
-            else:
-                wildcard_checker.append(False) # If not, append False
-    
-    if word in word_list:
-        # If it is, check to see if there is duplicated letters in the word
-        if len(set(word)) < len(list(word)):
-    
-            word_dict = dict()
+                    word_dict = dict()
 
-            for letter in word: # Creating a dict of the frequency of letters in our word
-                if letter not in word_dict:
-                    word_dict[letter] = 1
-                else:
-                    word_dict[letter] += 1
+                    for letter in word: # Creating a dict of the frequency of letters in our word
+                        if letter not in word_dict: 
+                            word_dict[letter] = 1 # make the number of letters one in the dictionary if the loop finds a new letter while iterating (there must be only one of this letter)
+                        else:
+                            word_dict[letter] += 1 # if the letter is in the word dictionary, then increase the value by one (there must be multiple of this letter)
 
-            for letter in word_dict: # Checking the letters in our dict to see if...
-                if letter not in hand: # they are in the dealt hand
-                    validity_checker.append(False)
-                    continue
-                if word_dict[letter] > hand[letter]: # if they've been used more than the hand has available to us
-                    validity_checker.append(False)
-                else:
-                    validity_checker.append(True)
+                    for letter in word_dict: # Checking the letters in our dict to see if...
+                        if letter not in hand: # they are in the dealt hand
+                            validity_checker.append(False)
+                            continue
+                        if word_dict[letter] > hand[letter]: # if they've been used more than the hand has available to us
+                            validity_checker.append(False)
+                        else:
+                            validity_checker.append(True)
+                            
+                else: # If there are no duplicated values...
+                    for letter in word: 
+                        if letter not in hand: # check if each letter is in the dealt hand
+                            validity_checker.append(False)
+                            continue
+                        else:
+                            validity_checker.append(True)  
+            else: # If replacing the wildcard with a vowel does not produce a valid word...
+                wildcard_checker.append(False)
+            
+
+        if True in wildcard_checker:
+            return True
+        elif False in wildcard_checker:
+            return False
+
+
+        if False in validity_checker:
+            return False
+        elif False not in validity_checker:
+            return True
         
-        else: # If there are no duplicated values...
-            for letter in word: 
-                if letter not in hand: 
-                    validity_checker.append(False)
-                    continue
-                else:
-                    validity_checker.append(True)
+    if "*" not in word: # if there is no wildcard in our word...
+        if word not in word_list: # is the word in the valid words list?
+            return False
+        else: # if the word is in the valid word list...
+            if len(set(word)) < len(list(word)): # checking if the word has duplicate letters
 
-        if wildcard_checker != []: # if there were wildcards in the word played
-            if False in validity_checker and True in wildcard_checker:
-                return False
-            elif True in validity_checker and True in wildcard_checker:
-                return True
-        else: # if there were not wild cards in the word played
-            if False in validity_checker:
-                return False
-            elif True in validity_checker:
-                return True
+                word_dict = dict()
 
+                for letter in word: # Creating a dict of the frequency of letters in our word
+                    if letter not in word_dict: 
+                        word_dict[letter] = 1 # make the number of letters one in the dictionary if the loop finds a new letter while iterating (there must be only one of this letter)
+                    else:
+                        word_dict[letter] += 1 # if the letter is in the word dictionary, then increase the value by one (there must be multiple of this letter)
+
+                for letter in word_dict: # Checking the letters in our dict to see if...
+                    if letter not in hand: # they are in the dealt hand
+                        validity_checker.append(False)
+                        continue
+                    if word_dict[letter] > hand[letter]: # if they've been used more than the hand has available to us
+                        validity_checker.append(False)
+                    else:
+                        validity_checker.append(True)
+
+            else: # If there are no duplicated values...
+                for letter in word: 
+                    if letter not in hand: 
+                        validity_checker.append(False)
+                        continue
+                    else:
+                        validity_checker.append(True) 
+
+        if False in validity_checker:
+            return False
+        if False not in validity_checker:
+            return True
 pass  # TO DO... Remove this line when you implement this function
 
 #
