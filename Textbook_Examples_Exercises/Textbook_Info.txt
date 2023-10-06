@@ -1,1 +1,2 @@
-The textbook used for this MIT course (6.0001 Introduction to Computer Science and Programming In Python) was entitled "Introduction to Computer Science and Programming Using Python - With Application to Computational Modeling and Understanding Data (3rd edition)" by John V. Guttag  
+The textbook used for this MIT course (6.0001 Introduction to Computer Science and Programming In Python) was entitled
+"Introduction to Computer Science and Programming Using Python - With Application to Computational Modeling and Understanding Data (3rd edition)" by John V. Guttag  

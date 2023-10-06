@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "Chapter_9",
             "type": "python",
@@ -12,6 +13,15 @@
             "internalConsoleOptions": "openOnSessionStart",
             "python": "C:\\Users\\devil\\anaconda3\\python.exe",
             "module": "Chapter_9"
+        },
+        {
+            "name": "Chapter_10",
+            "type": "python",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "openOnSessionStart",
+            "python": "C:\\Users\\devil\\anaconda3\\python.exe",
+            "module": "Chapter_10"
         }
     ]
 }
